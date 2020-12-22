@@ -1,0 +1,139 @@
+#html scrape sports ref
+#2000 to 2019
+#Not the most efficient way but worked best for my machine
+#Most efficient method likely to run the loop on just the readhtml into a list then do the table and id stuff
+library(rvest)
+library(tidyverse)
+library(ratelimitr)
+urls <- data.frame(x = 0:8661)
+urls$num <- urls$x*100
+urls$url <- paste0("https://www.sports-reference.com/cfb/play-index/pgl_finder.cgi?request=1&match=game&year_min=2000&year_max=2019&conf_id=&school_id=&opp_id=&game_type=&game_num_min=&game_num_max=&game_location=&game_result=&class=&c1stat=rec&c1comp=gt&c1val=0&c2stat=pass_att&c2comp=gt&c2val=0&c3stat=rush_att&c3comp=gt&c3val=0&c4stat=punt_ret&c4comp=gt&c4val=0&order_by=kick_ret&order_by_asc=&offset=",urls$num)
+ncaa_list <- list()
+# Ratelimit read_html to 100 pages per minute
+lim_readhtml <-limit_rate(read_html,rate(n = 100,period = 60))
+#loop through
+#SR boots me off every 1000, so skip that in the loop
+for (i in 1:8662) {
+if (i %% 1000 == 1) {
+       	 next
+  	  }
+    test_scrape <- lim_readhtml(urls[i,3])
+    player_nodes <- html_nodes(test_scrape, ".left:nth-child(2)")
+    #pull table from that page and append ids
+    ncaa_list[[i]] <- html_table(test_scrape, fill = TRUE)[[1]]
+    ncaa_list[[i]]$id <-  ids <- html_attr(player_nodes, "data-append-csv")
+    print(i)
+}
+#replace missing items
+#every 1000
+test_scrape <- read_html("https://www.sports-reference.com/cfb/play-index/pgl_finder.cgi?request=1&match=game&year_min=2000&year_max=2019&conf_id=&school_id=&opp_id=&game_type=&game_num_min=&game_num_max=&game_location=&game_result=&class=&c1stat=rec&c1comp=gt&c1val=0&c2stat=pass_att&c2comp=gt&c2val=0&c3stat=rush_att&c3comp=gt&c3val=0&c4stat=punt_ret&c4comp=gt&c4val=0&order_by=kick_ret&order_by_asc=&offset=100")
+player_nodes <- html_nodes(test_scrape, ".left:nth-child(2)")
+ncaa_list[[1]] <- html_table(test_scrape, fill = TRUE)[[1]]
+ncaa_list[[1]]$id <-  ids <- html_attr(player_nodes, "data-append-csv")
+test_scrape <- read_html("https://www.sports-reference.com/cfb/play-index/pgl_finder.cgi?request=1&match=game&year_min=2000&year_max=2019&conf_id=&school_id=&opp_id=&game_type=&game_num_min=&game_num_max=&game_location=&game_result=&class=&c1stat=rec&c1comp=gt&c1val=0&c2stat=pass_att&c2comp=gt&c2val=0&c3stat=rush_att&c3comp=gt&c3val=0&c4stat=punt_ret&c4comp=gt&c4val=0&order_by=kick_ret&order_by_asc=&offset=100000")
+player_nodes <- html_nodes(test_scrape, ".left:nth-child(2)")
+ncaa_list[[1001]] <- html_table(test_scrape, fill = TRUE)[[1]]
+ncaa_list[[1001]]$id <-  ids <- html_attr(player_nodes, "data-append-csv")
+test_scrape <- read_html("https://www.sports-reference.com/cfb/play-index/pgl_finder.cgi?request=1&match=game&year_min=2000&year_max=2019&conf_id=&school_id=&opp_id=&game_type=&game_num_min=&game_num_max=&game_location=&game_result=&class=&c1stat=rec&c1comp=gt&c1val=0&c2stat=pass_att&c2comp=gt&c2val=0&c3stat=rush_att&c3comp=gt&c3val=0&c4stat=punt_ret&c4comp=gt&c4val=0&order_by=kick_ret&order_by_asc=&offset=200000")
+player_nodes <- html_nodes(test_scrape, ".left:nth-child(2)")
+ncaa_list[[2001]] <- html_table(test_scrape, fill = TRUE)[[1]]
+ncaa_list[[2001]]$id <-  ids <- html_attr(player_nodes, "data-append-csv")
+test_scrape <- read_html("https://www.sports-reference.com/cfb/play-index/pgl_finder.cgi?request=1&match=game&year_min=2000&year_max=2019&conf_id=&school_id=&opp_id=&game_type=&game_num_min=&game_num_max=&game_location=&game_result=&class=&c1stat=rec&c1comp=gt&c1val=0&c2stat=pass_att&c2comp=gt&c2val=0&c3stat=rush_att&c3comp=gt&c3val=0&c4stat=punt_ret&c4comp=gt&c4val=0&order_by=kick_ret&order_by_asc=&offset=300000")
+player_nodes <- html_nodes(test_scrape, ".left:nth-child(2)")
+ncaa_list[[3001]] <- html_table(test_scrape, fill = TRUE)[[1]]
+ncaa_list[[3001]]$id <-  ids <- html_attr(player_nodes, "data-append-csv")
+test_scrape <- read_html("https://www.sports-reference.com/cfb/play-index/pgl_finder.cgi?request=1&match=game&year_min=2000&year_max=2019&conf_id=&school_id=&opp_id=&game_type=&game_num_min=&game_num_max=&game_location=&game_result=&class=&c1stat=rec&c1comp=gt&c1val=0&c2stat=pass_att&c2comp=gt&c2val=0&c3stat=rush_att&c3comp=gt&c3val=0&c4stat=punt_ret&c4comp=gt&c4val=0&order_by=kick_ret&order_by_asc=&offset=400000")
+player_nodes <- html_nodes(test_scrape, ".left:nth-child(2)")
+ncaa_list[[4001]] <- html_table(test_scrape, fill = TRUE)[[1]]
+ncaa_list[[4001]]$id <-  ids <- html_attr(player_nodes, "data-append-csv")
+test_scrape <- read_html("https://www.sports-reference.com/cfb/play-index/pgl_finder.cgi?request=1&match=game&year_min=2000&year_max=2019&conf_id=&school_id=&opp_id=&game_type=&game_num_min=&game_num_max=&game_location=&game_result=&class=&c1stat=rec&c1comp=gt&c1val=0&c2stat=pass_att&c2comp=gt&c2val=0&c3stat=rush_att&c3comp=gt&c3val=0&c4stat=punt_ret&c4comp=gt&c4val=0&order_by=kick_ret&order_by_asc=&offset=500000")
+player_nodes <- html_nodes(test_scrape, ".left:nth-child(2)")
+ncaa_list[[5001]] <- html_table(test_scrape, fill = TRUE)[[1]]
+ncaa_list[[5001]]$id <-  ids <- html_attr(player_nodes, "data-append-csv")
+test_scrape <- read_html("https://www.sports-reference.com/cfb/play-index/pgl_finder.cgi?request=1&match=game&year_min=2000&year_max=2019&conf_id=&school_id=&opp_id=&game_type=&game_num_min=&game_num_max=&game_location=&game_result=&class=&c1stat=rec&c1comp=gt&c1val=0&c2stat=pass_att&c2comp=gt&c2val=0&c3stat=rush_att&c3comp=gt&c3val=0&c4stat=punt_ret&c4comp=gt&c4val=0&order_by=kick_ret&order_by_asc=&offset=600000")
+player_nodes <- html_nodes(test_scrape, ".left:nth-child(2)")
+ncaa_list[[6001]] <- html_table(test_scrape, fill = TRUE)[[1]]
+ncaa_list[[6001]]$id <-  ids <- html_attr(player_nodes, "data-append-csv")
+test_scrape <- read_html("https://www.sports-reference.com/cfb/play-index/pgl_finder.cgi?request=1&match=game&year_min=2000&year_max=2019&conf_id=&school_id=&opp_id=&game_type=&game_num_min=&game_num_max=&game_location=&game_result=&class=&c1stat=rec&c1comp=gt&c1val=0&c2stat=pass_att&c2comp=gt&c2val=0&c3stat=rush_att&c3comp=gt&c3val=0&c4stat=punt_ret&c4comp=gt&c4val=0&order_by=kick_ret&order_by_asc=&offset=700000")
+player_nodes <- html_nodes(test_scrape, ".left:nth-child(2)")
+ncaa_list[[7001]] <- html_table(test_scrape, fill = TRUE)[[1]]
+ncaa_list[[7001]]$id <-  ids <- html_attr(player_nodes, "data-append-csv")
+test_scrape <- read_html("https://www.sports-reference.com/cfb/play-index/pgl_finder.cgi?request=1&match=game&year_min=2000&year_max=2019&conf_id=&school_id=&opp_id=&game_type=&game_num_min=&game_num_max=&game_location=&game_result=&class=&c1stat=rec&c1comp=gt&c1val=0&c2stat=pass_att&c2comp=gt&c2val=0&c3stat=rush_att&c3comp=gt&c3val=0&c4stat=punt_ret&c4comp=gt&c4val=0&order_by=kick_ret&order_by_asc=&offset=800000")
+player_nodes <- html_nodes(test_scrape, ".left:nth-child(2)")
+ncaa_list[[8001]] <- html_table(test_scrape, fill = TRUE)[[1]]
+ncaa_list[[8001]]$id <-  ids <- html_attr(player_nodes, "data-append-csv")
+
+#combine list into table
+t1 <- unique(do.call(rbind, ncaa_list))
+#remove headers in table
+t1 <- t1[-1,]
+#rename columns
+names(t1) <- c("rk", "player", "date", "game_no", "school", "home_away", "opponent", "result", "pass_comp", "pass_att", "pass_pct", "pass_yd", "pass_td", "pass_int", "pass_rate", "rush_att", "rush_yd", "rush_avg", "rush_td", "rec_rect", "rec_yd", "rec_avg", "rec_td", "kr_ret", "kr_yd", "kr_avg", "kr_td", "pr_ret", "pr_yd", "pr_avg", "pr_td", "id")
+#convert stat columns to numeric
+t1[,c(9:31)] <- lapply(t1[,c(9:31)], as.numeric)
+#replace NA with 0
+t1[is.na(t1)] <- 0
+#add team stats
+t1$tm_pass_att <- ave(t1$pass_att, t1$date, t1$school, FUN = sum)
+t1$tm_rush_att <- ave(t1$rush_att, t1$date, t1$school, FUN = sum)
+t1$tm_rush_yd <- ave(t1$rush_yd, t1$date, t1$school, FUN = sum)
+t1$tm_rush_td <- ave(t1$rush_td, t1$date, t1$school, FUN = sum)
+t1$tm_rec_rect <- ave(t1$rec_rect, t1$date, t1$school, FUN = sum)
+t1$tm_rec_yd <- ave(t1$rec_yd, t1$date, t1$school, FUN = sum)
+t1$tm_rec_td <- ave(t1$rec_td, t1$date, t1$school, FUN = sum)
+#add game counter
+t1$game <- 1
+#add season
+t1$season <- ifelse(as.numeric(substr(t1$date,6,7)) > 5, as.numeric(substr(t1$date,1,4)), as.numeric(substr(t1$date,1,4))-1 )
+
+#seasons table
+ncaa_seasons <- aggregate(. ~ player + id + school + season, data = t1[,c(2,5,9:41)], FUN = sum)
+#correct averages
+ncaa_seasons$pass_pct <- ncaa_seasons$pass_comp/ncaa_seasons$pass_att
+ncaa_seasons$pass_rate <- NULL
+ncaa_seasons$rush_avg <- ncaa_seasons$rush_yd/ncaa_seasons$rush_att
+ncaa_seasons$rec_avg <- ncaa_seasons$rec_yd/ncaa_seasons$rec_rect
+ncaa_seasons$kr_avg <- ncaa_seasons$kr_yd/ncaa_seasons$kr_ret
+ncaa_seasons$pr_avg <- ncaa_seasons$pr_yd/ncaa_seasons$pr_ret
+#ms stats
+ncaa_seasons$ms_rush_att <- ncaa_seasons$rush_att/ncaa_seasons$tm_rush_att
+ncaa_seasons$ms_rush_yd <- ncaa_seasons$rush_yd/ncaa_seasons$tm_rush_yd
+ncaa_seasons$ms_rush_td <- ncaa_seasons$rush_td/ncaa_seasons$tm_rush_td
+ncaa_seasons$ms_rec_rect <- ncaa_seasons$rec_rect/ncaa_seasons$tm_rec_rect
+ncaa_seasons$ms_rec_yd <- ncaa_seasons$rec_yd/ncaa_seasons$tm_rec_yd
+ncaa_seasons$ms_rec_td <- ncaa_seasons$rec_td/ncaa_seasons$tm_rec_td
+ncaa_seasons$ms_scrim_yd <- (ncaa_seasons$rec_yd + ncaa_seasons$rush_yd)/(ncaa_seasons$tm_rec_yd + ncaa_seasons$tm_rush_yd)
+ncaa_seasons$ms_scrim_td <- (ncaa_seasons$rec_td + ncaa_seasons$rush_td)/(ncaa_seasons$tm_rec_td + ncaa_seasons$tm_rush_td)
+ncaa_seasons$ms_touches <- (ncaa_seasons$rec_rect + ncaa_seasons$rush_att)/(ncaa_seasons$tm_rec_rect + ncaa_seasons$tm_rush_att)
+ncaa_seasons$dom <- (ncaa_seasons$ms_rec_yd + ncaa_seasons$ms_rec_td)/2
+#per play stats
+ncaa_seasons$rec_yd_pta <- ncaa_seasons$rec_yd/ncaa_seasons$tm_pass_att
+ncaa_seasons$rec_td_pta <- ncaa_seasons$rec_td/ncaa_seasons$tm_pass_att
+ncaa_seasons$adj_ypp <- (ncaa_seasons$rush_yd + 2*ncaa_seasons$rec_yd)/(ncaa_seasons$tm_pass_att + ncaa_seasons$tm_rush_att)
+#na to 0
+ncaa_seasons[is.na(ncaa_seasons)] <- 0
+
+
+#compute per game stats
+ncaa_seasons$pass_comp_g <- ncaa_seasons$pass_comp/ncaa_seasons$game
+ncaa_seasons$pass_att_g <- ncaa_seasons$pass_att/ncaa_seasons$game
+ncaa_seasons$pass_yd_g <- ncaa_seasons$pass_yd/ncaa_seasons$game
+ncaa_seasons$pass_td_g <- ncaa_seasons$pass_td/ncaa_seasons$game
+ncaa_seasons$pass_int_g <- ncaa_seasons$pass_int/ncaa_seasons$game
+ncaa_seasons$rush_att_g <- ncaa_seasons$rush_att/ncaa_seasons$game
+ncaa_seasons$rush_yd_g <- ncaa_seasons$rush_yd/ncaa_seasons$game
+ncaa_seasons$rush_td_g <- ncaa_seasons$rush_td/ncaa_seasons$game
+ncaa_seasons$rec_rect_g <- ncaa_seasons$rec_rect/ncaa_seasons$game
+ncaa_seasons$rec_yd_g <- ncaa_seasons$rec_yd/ncaa_seasons$game
+ncaa_seasons$rec_td_g <- ncaa_seasons$rec_td/ncaa_seasons$game
+ncaa_seasons$kr_ret_g <- ncaa_seasons$kr_ret/ncaa_seasons$game
+ncaa_seasons$kr_yd_g <- ncaa_seasons$kr_yd/ncaa_seasons$game
+ncaa_seasons$kr_td_g <- ncaa_seasons$kr_td/ncaa_seasons$game
+ncaa_seasons$pr_ret_g <- ncaa_seasons$pr_ret/ncaa_seasons$game
+ncaa_seasons$pr_yd_g <- ncaa_seasons$pr_yd/ncaa_seasons$game
+ncaa_seasons$pr_td_g <- ncaa_seasons$pr_td/ncaa_seasons$game
+#pass efficiency
+ncaa_seasons$pass_ypa <- ncaa_seasons$pass_yd/ncaa_seasons$pass_att
+ncaa_seasons$pass_aya <- (ncaa_seasons$pass_yd + 20*ncaa_seasons$pass_td - 45*ncaa_seasons$pass_int)/(ncaa_seasons$pass_att)
+#clean up nas
+ncaa_seasons[is.na(ncaa_seasons)] <- 0
